@@ -8,5 +8,5 @@ router.post('/register',registerPost);
 router.get('/register',registerGet)
 router.post('/login',loginPost);
 router.get('/login',loginGet);
-//router.post('/logout',logout);
+router.post('/logout',logout);
 module.exports = router;
