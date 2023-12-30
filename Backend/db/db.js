@@ -36,7 +36,8 @@ const createPostsTableQuery = `
         date DATE,
         img VARCHAR(255),
         uid INT NOT NULL,
-        FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE
+        FOREIGN KEY (uid) REFERENCES users(id) ON DELETE CASCADE,
+        cat VARCHAR(40)
     )
 `;
 

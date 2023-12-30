@@ -2,6 +2,7 @@ const db = require('../db/db')
 const bcrypt = require('bcryptjs')
 const {createToken} = require('../utils/jwt')
 const jwt = require('jsonwebtoken')
+const { json } = require('express')
 const registerPost = async(req,res)=>{
     const q = 'SELECT * FROM users WHERE email = ? OR username = ?';
 
@@ -36,10 +37,11 @@ const loginPost = async(req,res)=>{
         
         const isPasswordCorrect = bcrypt.compareSync(req.body.password,data[0].password);
         if(!isPasswordCorrect) return res.status(400).json("Wrong username or password!")
-        const token = jwt.sign({id:data[0].id},"jwtkey")
+        const token = jwt.sign({ id: data[0].id }, process.env.JWT_SECRET);
+        console.log(token)
         const {password, ...other} = data[0]
-        res.cookie("access token",token,{
-            httponly:true,maxAge:process.env.JWT_LIFETIME
+        res.cookie("access_token",token,{
+            httponly:true
         }).status(200).json(other)
     })
 }
@@ -48,5 +50,12 @@ const loginGet = async(req,res)=>{
     res.json("Hello this is where you login")
 }
 
+const logout = async(req,res)=>{
+    res.clearCookie("access_token",{
+        sameSite:"none",
+        secure:true
+    }).status(200).json("User has logged out !.")
+}
 
-module.exports = {registerPost , registerGet,loginPost,loginGet}
+
+module.exports = {registerPost , registerGet,loginPost,loginGet,logout}
